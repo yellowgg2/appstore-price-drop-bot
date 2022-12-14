@@ -11,7 +11,7 @@
 - `/help` : 도움말
 - `/list` : 내가 등록한 앱 목록보기
 
-t.me/youngs_appstore_price_drop_bot
+[t.me/youngs_appstore_price_drop_bot](t.me/youngs_appstore_price_drop_bot)
 
 # How to install
 
