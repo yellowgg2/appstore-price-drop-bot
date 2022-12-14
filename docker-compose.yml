@@ -1,0 +1,14 @@
+version: "3.1"
+services:
+  appstore-price-bot:
+    container_name: appstore-price-bot
+    image: appstore-pricebot
+    build:
+      context: .
+      args:
+        PUID: $PUID
+        PGID: $PGID
+        UNAME: appstore-priceuser
+    restart: unless-stopped
+    volumes:
+      - ./db:/bot/db
