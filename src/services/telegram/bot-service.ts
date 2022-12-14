@@ -63,8 +63,7 @@ export default class BotService {
     DbHandler.insertNewUser(username, firstName)
       .then(() => this.showHelp(chatId))
       .catch(e => {
-        this.sendMsg(chatId, `${e}`);
-        glog.error(`[Line - 94][File - bot-service.ts] ${e}`);
+        glog.error(`[Line - 66][File - bot-service.ts] ${e}`);
       });
   }
 
@@ -72,8 +71,7 @@ export default class BotService {
     DbHandler.insertChatroom(username, chatId)
       .then(() => console.log)
       .catch(e => {
-        this.sendMsg(chatId, `${e}`);
-        glog.error(`[Line - 94][File - bot-service.ts] ${e}`);
+        glog.error(`[Line - 74][File - bot-service.ts] ${e}`);
       });
   }
 
