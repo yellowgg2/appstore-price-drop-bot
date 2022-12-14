@@ -27,7 +27,7 @@ class Starter {
     await DbService.getInstance()
       .createTables()
       .then(() => {
-        let pcs = new PriceCheckingScheduler(10);
+        let pcs = new PriceCheckingScheduler(3600);
         pcs.start();
       })
       .catch(e => glog.error(`[Line - 14][File - app.ts] ${e}`));
