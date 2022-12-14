@@ -15,4 +15,5 @@
 
 # How to install
 
-`docker-compose up -d --build`
+1. `.env` 파일에 BOT TOKEN 등록
+2. `docker-compose up -d --build`
