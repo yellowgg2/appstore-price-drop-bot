@@ -20,7 +20,10 @@ export default class ComparePrice {
     let apps = await DbHandler.getAllAppsForUser(username, chatId);
     for (let app of apps) {
       const { url, latest_price, title } = app;
-      let builtMsg = `[ ${title} ] 현재가격: $${latest_price}\n${url}`;
+      let builtMsg = `[ ${title} ] 현재가격: $${latest_price}\n${this.createLinkString(
+        url,
+        "바로가기"
+      )}`;
       this.sendBackNotiWithButtons(builtMsg, latest_price, app, false);
     }
   }
@@ -43,13 +46,17 @@ export default class ComparePrice {
     const { url, price, title } = v;
 
     if (`${price}` !== appInfo.latest_price) {
-      let builtMsg = `${url}\n\n`;
+      let builtMsg = `${this.createLinkString(url, "바로가기")}\n\n`;
       builtMsg += `🛒 [${title}] 앱 가격 변경 알림\n\n`;
       builtMsg += "-----------\n";
       builtMsg += `$${appInfo.latest_price} -> $${price}`;
 
       this.sendBackNotiWithButtons(builtMsg, price, appInfo);
     }
+  }
+
+  createLinkString(url: string, title: string) {
+    return `👉 <a href="${url}">${title}</a>`;
   }
 
   sendBackNotiWithButtons(
