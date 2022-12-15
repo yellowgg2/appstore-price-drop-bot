@@ -61,7 +61,7 @@ export default class ComparePrice {
     const { url, price, title } = v;
 
     glog.info(
-      `[Line - 63][File - compare-price.ts] Compare DB: ${price} !== AppStore: ${appInfo.latest_price}`
+      `[Line - 63][File - compare-price.ts] Compare DB: [${appInfo.latest_price}] to AppStore: [${price}]`
     );
     if (`${price}` !== appInfo.latest_price) {
       let builtMsg = this.createLinkString(url, "앱스토어 바로가기");
