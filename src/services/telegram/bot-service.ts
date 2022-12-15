@@ -160,6 +160,12 @@ export default class BotService {
             }
           }
           break;
+        case /\/top/.test(cmd[0]):
+          {
+            const cp = new ComparePrice();
+            cp.sendTop5Apps(chatId);
+          }
+          break;
         default:
           console.log(`${username} - ${msg.text}`);
           break;

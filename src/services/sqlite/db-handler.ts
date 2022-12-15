@@ -11,6 +11,7 @@ export interface IAppPrices {
   url: string;
   latest_price: string;
   title: string;
+  tot_count?: number;
 }
 
 export interface ICount {
@@ -84,6 +85,14 @@ export default class DbHandler {
   static async getAllAppsCount(): Promise<Array<ICount>> {
     let result: Array<ICount> = await DbService.getInstance().selectQuery(
       `SELECT COUNT(*) as count FROM appstore_price`
+    );
+
+    return result;
+  }
+
+  static async getTop5(): Promise<Array<IAppPrices>> {
+    let result: Array<IAppPrices> = await DbService.getInstance().selectQuery(
+      `SELECT *, COUNT(*) AS tot_count from appstore_price GROUP BY store_id ORDER BY tot_count DESC LIMIT 5;`
     );
 
     return result;

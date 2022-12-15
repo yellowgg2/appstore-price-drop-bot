@@ -20,7 +20,7 @@ export default class ComparePrice {
     let apps = await DbHandler.getAllAppsForUser(username, chatId);
     for (let app of apps) {
       const { url, latest_price, title } = app;
-      let builtMsg = `[ ${title} ] 현재가격: $${latest_price}\n`;
+      let builtMsg = `[ ${title} ]\n💰 현재가격: $${latest_price}\n`;
       builtMsg += this.createLinkString(url, "앱스토어 바로가기");
       this.sendBackNotiWithButtons(builtMsg, latest_price, app, false);
     }
@@ -35,6 +35,17 @@ export default class ComparePrice {
     builtMsg += `사용자 수: ${users[0].count}\n`;
     builtMsg += `등록 앱 수: ${apps[0].count}`;
     this.sendMsg(chatId, builtMsg);
+  }
+
+  async sendTop5Apps(chatId: number) {
+    let apps = await DbHandler.getTop5();
+    for (let app of apps) {
+      const { url, latest_price, title } = app;
+      let builtMsg = `[ ${title} ]\n💰 현재가격: $${latest_price}\n`;
+      builtMsg += `🤩 ${app.tot_count} 명이 주시 중\n\n`;
+      builtMsg += this.createLinkString(url, "앱스토어 바로가기");
+      this.sendMsg(chatId, builtMsg);
+    }
   }
 
   async checkPriceOfApp(appInfo: IAppPrices) {
