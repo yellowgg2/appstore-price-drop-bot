@@ -20,10 +20,8 @@ export default class ComparePrice {
     let apps = await DbHandler.getAllAppsForUser(username, chatId);
     for (let app of apps) {
       const { url, latest_price, title } = app;
-      let builtMsg = `[ ${title} ] 현재가격: $${latest_price}\n${this.createLinkString(
-        url,
-        "바로가기"
-      )}`;
+      let builtMsg = `[ ${title} ] 현재가격: $${latest_price}\n`;
+      builtMsg += this.createLinkString(url, "앱스토어 바로가기");
       this.sendBackNotiWithButtons(builtMsg, latest_price, app, false);
     }
   }
@@ -46,7 +44,8 @@ export default class ComparePrice {
     const { url, price, title } = v;
 
     if (`${price}` !== appInfo.latest_price) {
-      let builtMsg = `${this.createLinkString(url, "바로가기")}\n\n`;
+      let builtMsg = this.createLinkString(url, "앱스토어 바로가기");
+      builtMsg += `\n\n`;
       builtMsg += `🛒 [${title}] 앱 가격 변경 알림\n\n`;
       builtMsg += "-----------\n";
       builtMsg += `$${appInfo.latest_price} -> $${price}`;
@@ -79,7 +78,8 @@ export default class ComparePrice {
     ik.push(firstRow);
 
     this.sendMsg(chatroom_id, builtMsg, {
-      reply_markup: ik.getMarkup()
+      reply_markup: ik.getMarkup(),
+      parse_mode: "HTML"
     }).then(() => {
       if (updatePrice) {
         DbHandler.updateAppPrice(
