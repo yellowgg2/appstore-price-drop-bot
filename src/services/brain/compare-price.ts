@@ -25,6 +25,17 @@ export default class ComparePrice {
     }
   }
 
+  async sendBackStatsToAdmin(username: string, chatId: number) {
+    let users = await DbHandler.getAllUsersCount();
+    let apps = await DbHandler.getAllAppsCount();
+
+    let builtMsg = "통계\n";
+    builtMsg += "------------\n\n";
+    builtMsg += `사용자 수: ${users[0].count}\n`;
+    builtMsg += `등록 앱 수: ${apps[0].count}`;
+    this.sendMsg(chatId, builtMsg);
+  }
+
   async checkPriceOfApp(appInfo: IAppPrices) {
     let store = require("app-store-scraper");
 

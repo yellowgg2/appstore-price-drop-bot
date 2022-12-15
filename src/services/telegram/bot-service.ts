@@ -147,8 +147,18 @@ export default class BotService {
           this.startBot(username, chatId, msg.from?.first_name);
           break;
         case /\/list/.test(cmd[0]):
-          const cp = new ComparePrice();
-          cp.sendBackAllAppsToUser(username, chatId);
+          {
+            const cp = new ComparePrice();
+            cp.sendBackAllAppsToUser(username, chatId);
+          }
+          break;
+        case /\/stat/.test(cmd[0]):
+          {
+            if (process.env.ADMIN_TELEGRAM_USERNAME === username) {
+              const cp = new ComparePrice();
+              cp.sendBackStatsToAdmin(username, chatId);
+            }
+          }
           break;
         default:
           console.log(`${username} - ${msg.text}`);

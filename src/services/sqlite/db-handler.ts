@@ -13,6 +13,10 @@ export interface IAppPrices {
   title: string;
 }
 
+export interface ICount {
+  count: number;
+}
+
 export default class DbHandler {
   static async insertNewUser(
     username: string,
@@ -64,6 +68,22 @@ export default class DbHandler {
   ): Promise<Array<IAppPrices>> {
     let result: Array<IAppPrices> = await DbService.getInstance().selectQuery(
       `SELECT * FROM appstore_price WHERE username = '${username}' AND chatroom_id = ${chatId}`
+    );
+
+    return result;
+  }
+
+  static async getAllUsersCount(): Promise<Array<ICount>> {
+    let result: Array<ICount> = await DbService.getInstance().selectQuery(
+      `SELECT COUNT(*) as count FROM users`
+    );
+
+    return result;
+  }
+
+  static async getAllAppsCount(): Promise<Array<ICount>> {
+    let result: Array<ICount> = await DbService.getInstance().selectQuery(
+      `SELECT COUNT(*) as count FROM appstore_price`
     );
 
     return result;
