@@ -5,15 +5,21 @@ import {
   Row
 } from "node-telegram-keyboard-wrapper";
 import { botInstance } from "../../global-bot-config";
+import { glog } from "../logger/custom-logger";
 import DbHandler, { IAppPrices } from "../sqlite/db-handler";
 
 // inline button을 눌렀을 때 발생하는 이벤트를 처리하는 클래스
 export default class ComparePrice {
   async startCompareApps() {
+    glog.info(`[Line - 14][File - compare-price.ts] Start Checking Apps`);
     let apps = await DbHandler.getAllApps();
     for (let app of apps) {
+      glog.info(
+        `[Line - 15][File - compare-price.ts] Check App [${app.title}], Price [${app.latest_price}]`
+      );
       await this.checkPriceOfApp(app);
     }
+    glog.info(`[Line - 14][File - compare-price.ts] End Checking Apps`);
   }
 
   async sendBackAllAppsToUser(username: string, chatId: number) {
@@ -54,6 +60,9 @@ export default class ComparePrice {
     let v = await store.app({ id: appInfo.store_id });
     const { url, price, title } = v;
 
+    glog.info(
+      `[Line - 63][File - compare-price.ts] Compare DB: ${price} !== AppStore: ${appInfo.latest_price}`
+    );
     if (`${price}` !== appInfo.latest_price) {
       let builtMsg = this.createLinkString(url, "앱스토어 바로가기");
       builtMsg += `\n\n`;

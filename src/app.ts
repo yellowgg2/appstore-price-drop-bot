@@ -27,7 +27,8 @@ class Starter {
     await DbService.getInstance()
       .createTables()
       .then(() => {
-        let pcs = new PriceCheckingScheduler(3600);
+        let period = parseInt(process.env?.CHECK_PERIOD ?? "600");
+        let pcs = new PriceCheckingScheduler(period);
         pcs.start();
       })
       .catch(e => glog.error(`[Line - 14][File - app.ts] ${e}`));
