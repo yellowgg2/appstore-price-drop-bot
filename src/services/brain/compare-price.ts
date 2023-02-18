@@ -6,10 +6,13 @@ import {
 } from "node-telegram-keyboard-wrapper";
 import { botInstance } from "../../global-bot-config";
 import { glog } from "../logger/custom-logger";
-import DbHandler, { IAppPrices } from "../sqlite/db-handler";
+import DbHandler, { IAppPrices, IAppTracker } from "../sqlite/db-handler";
+import moment from "moment";
 
 // inline button을 눌렀을 때 발생하는 이벤트를 처리하는 클래스
 export default class ComparePrice {
+  private preventDupAlert: IAppTracker[] = [];
+
   async startCompareApps() {
     glog.info(`[Line - 14][File - compare-price.ts] Start Checking Apps`);
     let apps = await DbHandler.getAllApps();
@@ -54,6 +57,28 @@ export default class ComparePrice {
     }
   }
 
+  // 리턴값이 true면 알림을 보내고 false면 보내지 않는다
+  // 24시간이 지나면 배열에서 뺀다
+  checkDupAlert(appInfo: IAppPrices) {
+    for (let i = 0; i < this.preventDupAlert.length; i++) {
+      let app = this.preventDupAlert[i];
+      if (
+        app.chatroom_id === appInfo.chatroom_id &&
+        app.store_id === appInfo.store_id &&
+        app.username === appInfo.username
+      ) {
+        let diffTime = moment().diff(app.lastUpdateTime);
+        if (diffTime < 86400000) {
+          return false;
+        } else {
+          this.preventDupAlert.splice(i, 1);
+        }
+      }
+    }
+    this.preventDupAlert.push({ ...appInfo, lastUpdateTime: moment() });
+    return true;
+  }
+
   async checkPriceOfApp(appInfo: IAppPrices) {
     let store = require("app-store-scraper");
 
@@ -63,7 +88,7 @@ export default class ComparePrice {
     glog.info(
       `[Line - 63][File - compare-price.ts] Compare DB: [${appInfo.latest_price}] to AppStore: [${price}]`
     );
-    if (`${price}` !== appInfo.latest_price) {
+    if (`${price}` !== appInfo.latest_price && this.checkDupAlert(appInfo)) {
       let builtMsg = this.createLinkString(url, "앱스토어 바로가기");
       builtMsg += `\n\n`;
       builtMsg += `🛒 [${title}] 앱 가격 변경 알림\n\n`;

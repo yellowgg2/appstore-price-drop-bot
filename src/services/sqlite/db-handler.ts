@@ -4,6 +4,11 @@ interface IUsers {
   username: string;
   first_name: string;
 }
+
+export interface IAppLastUpdatePriceTracker {
+  lastUpdateTime: moment.Moment;
+}
+
 export interface IAppPrices {
   store_id: string;
   username: string;
@@ -13,6 +18,8 @@ export interface IAppPrices {
   title: string;
   tot_count?: number;
 }
+
+export type IAppTracker = IAppLastUpdatePriceTracker & IAppPrices;
 
 export interface ICount {
   count: number;
